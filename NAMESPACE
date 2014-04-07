@@ -1,0 +1,8 @@
+S3method(print,nps.test)
+export(npc)
+export(nps)
+export(nps.se)
+export(nps.test)
+export(nps.var)
+export(npvar)
+export(scalestrip)
