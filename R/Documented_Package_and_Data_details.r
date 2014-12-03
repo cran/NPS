@@ -1,15 +1,16 @@
-#'Small convenience functions and tests for working with the Net Promoter Score (NPS)
+#'Convenience Functions and Tests for Working With the Net Promoter Score (NPS)
 #'
 #' \tabular{ll}{
 #' Package: \tab NPS\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.1\cr
-#' Date: \tab 2013-01-29\cr
+#' Version: \tab 1.1\cr
+#' Date: \tab 2014-12-03\cr
 #' License: \tab GPL (>= 2)\cr
 #' LazyLoad: \tab yes\cr
+#' Encoding: \tab UTF-8\cr
 #' }
 #'
-#'This package provides a few small functions to make working with survey data in an NPS context easier. Specifically, data transformation methods, some methods for examining the statistical properties of the NPS, such as its variance and standard errors, and some simple inferential testing procedures.
+#'Small functions to make working with survey data in the context of a Net Promoter programme easier. Specifically, data transformation methods, some methods for examining the statistical properties of the NPS, such as its variance and standard errors, and some simple inferential testing procedures. Net Promoter and NPS are registered trademarks of Bain & Company, Satmetrix Systems and Fred Reichheld.
 #'
 #'
 #' @name NPS-package

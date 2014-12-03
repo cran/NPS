@@ -34,13 +34,7 @@
 #' #You can round it if you like
 #' round(nps(x)) ; round(nps(x),1)
 nps <- function(x, breaks = list(0:6, 7:8, 9:10)){ 
-    x2 <- x[!is.na(x)]
-    na <- ! x2 %in% unlist(breaks)
-    if(mean(na) != 0) 
-        warning(sum(na), " values outside specified range for Recommend scale (",min(unlist(breaks)), ":", max(unlist(breaks)), "), and excluded.  Use 'breaks' to change this.")
-    
-    tab <- table(factor(x, levels=unlist(breaks)))
-    (sum(tab[as.character(breaks[[3]])]) - sum(tab[as.character(breaks[[1]])])) / sum(tab)
+    mean(as.numeric(npc(x))-2)
 }
 
 #' Create Net Promoter Categories from Likelihood to Recommend Scores
@@ -81,15 +75,21 @@ nps <- function(x, breaks = list(0:6, 7:8, 9:10)){
 #'
 #' nps(rec)
 npc <- function(x, breaks = list(0:6, 7:8, 9:10)) {
-    if(!is.numeric(x)) {
-        message("Warning: Data of class ",paste(class(x), collapse=" ")," supplied; converted to numeric.")
-        x <- as.numeric(as.character(factor(x, levels = unlist(breaks))))
-        }
-    cut(x, 
-        c(min(unlist(breaks)-1),
-            unlist(lapply(breaks, max))),
-        labels = c("Detractor","Passive","Promoter")
-        )
+  if (!is.numeric(x)) {
+    message("Warning: Data of class ", paste(class(x), collapse = " "), 
+            " supplied; converted to numeric.")
+    x <- as.numeric(as.character(factor(x, levels = unlist(breaks))))
+  }
+  
+  x2 <- x[!is.na(x)]
+  na <- !x2 %in% unlist(breaks)
+  if(length(na) < 1) return(NA)
+  if (mean(na) != 0) 
+    warning(sum(na), " values outside specified range for Recommend scale (", 
+            min(unlist(breaks)), ":", max(unlist(breaks)), "), and excluded.  Use 'breaks' to change this.")
+    
+  cut(x, c(min(unlist(breaks) - 1), unlist(lapply(breaks, max))), 
+      labels = c("Detractor", "Passive", "Promoter"))
 }
 
 
@@ -211,15 +211,18 @@ nps.test <- function(x, y=NULL, test="wald", conf = .95, breaks = list(0:6, 7:8,
 #' @return Unlabelled numeric data (by defualt), or an unlabelled ordered factor (if requested).
 #' @export
 #' @author Brendan Rocks \email{rocks.brendan@@gmail.com}
-scalestrip <- function(x, ordinal=FALSE){
-    out <- function(x) switch(ordinal+1, as.numeric(x), ordered(x))
-
-    if(!(is.data.frame(x)|is.matrix(x))){	return(out(as.numeric(gsub("-...+","",x))))		} else
-
-    if(is.data.frame(x)|is.matrix(x)){
-    for(i in 1:ncol(x)) {x[,i] <- out(gsub("-...+","",x[,i]))	}
-    return(x)}
-}
+scalestrip <- function (x, ordinal = FALSE) {
+    out <- function(x) switch(ordinal + 1, as.numeric(x), ordered(x))
+    if (!(is.data.frame(x) | is.matrix(x))) {
+      return(out(as.numeric(gsub("[[:alpha:]]|[[:punct:]]", "", x))))
+    }
+    else if (is.data.frame(x) | is.matrix(x)) {
+      for (i in 1:ncol(x)) {
+        x[, i] <- out(gsub("[[:alpha:]]|[[:punct:]]", "", x[, i]))
+      }
+      return(x)
+    }
+  }
 
 #' @return \code{NULL}
 #'
